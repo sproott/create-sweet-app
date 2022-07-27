@@ -1,23 +1,37 @@
 import path from 'path'
+import chalk from 'chalk'
 import * as svelteInit from 'create-svelte'
 import { execa } from 'execa'
-import fs from 'fs-extra'
+import ora from 'ora'
 import { PackageJson } from 'type-fest'
+import { readPackageJson, writePackageJson } from './files'
+import {
+  trpcInstaller,
+  TrpcInstallerOptions,
+  windiInstaller,
+} from './installers'
+import { Dependency, Installer } from './types'
+import { logger } from './utils/logger'
 
-export interface Options {
+interface SvelteKitOptions {
   projectName: string
   prettier: boolean
   eslint: boolean
 }
+export type Options = SvelteKitOptions & {
+  useExperimentalTrpcVersion: boolean
+}
 
 const addPackage = async ({
-  name,
   pkgJson,
+  name,
   version = 'latest',
+  dev = false,
 }: {
-  name: string
   pkgJson: PackageJson
+  name: string
   version?: string
+  dev?: boolean
 }): Promise<{ pkgJson: PackageJson }> => {
   const { stdout: latestVersion } = await execa('npm', [
     'show',
@@ -25,51 +39,51 @@ const addPackage = async ({
     'version',
   ])
 
+  const fieldName = dev ? 'devDependencies' : 'dependencies'
+
   return {
     pkgJson: {
       ...pkgJson,
-      dependencies: {
-        ...pkgJson.dependencies,
+      [fieldName]: {
+        ...pkgJson[fieldName],
         [name]: `^${latestVersion}`,
       },
     },
   }
 }
 
-interface Package {
-  name: string
-  version?: string
-}
-type Addon = () => Promise<{ packages: Package[] }>
-
-// eslint-disable-next-line @typescript-eslint/require-await
-const addWindi: Addon = async () => {
-  return {
-    packages: [{ name: 'vite-plugin-windicss' }],
-  }
+const runInstaller = async (
+  installer: Installer,
+): Promise<ReturnType<Installer['run']>> => {
+  const spinner = ora(`Adding ${installer.name}...`).start()
+  const result = await installer.run()
+  spinner.succeed(
+    chalk.green(`Successfully added ${chalk.green.bold(installer.name)}!`),
+  )
+  return result
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
-const addTrpc: Addon = async () => {
-  const version = 'latest'
+export const runInstallers = async ({
+  pkgJson,
+  useExperimentalTrpcVersion,
+}: {
+  pkgJson: PackageJson
+  useExperimentalTrpcVersion: boolean
+}) => {
+  const installers: Installer[] = [
+    windiInstaller,
+    trpcInstaller({ useExperimentalVersion: useExperimentalTrpcVersion }),
+  ]
 
-  return {
-    packages: [
-      { name: '@trpc/server', version },
-      { name: '@trpc/client', version },
-    ],
-  }
-}
+  logger.info('Adding components...')
+  const outputs = await Promise.all(installers.map(runInstaller))
 
-const runAddons = async ({ pkgJson }: { pkgJson: PackageJson }) => {
-  const addons: Addon[] = [addWindi, addTrpc]
-
-  const outputs = await Promise.all(addons.map((addon) => addon()))
-
-  const packages = outputs.reduce<Package[]>((acc, output) => {
-    return [...acc, ...output.packages]
+  const packages = outputs.reduce<Dependency[]>((acc, output) => {
+    return [...acc, ...output.dependencies]
   }, [])
+  logger.info('')
 
+  const spinner = ora('Adding dependencies...').start()
   let newPkgJson = pkgJson
   for (const pkg of packages) {
     const result = await addPackage({
@@ -78,20 +92,20 @@ const runAddons = async ({ pkgJson }: { pkgJson: PackageJson }) => {
     })
     newPkgJson = result.pkgJson
   }
+  spinner.succeed(chalk.green('Successfully added dependencies!'))
+  logger.info('')
 
   return { pkgJson: newPkgJson }
 }
 
-export const create = async ({
-  projectName = 'sweet-app',
+const createSvelteKitProject = ({
+  projectName,
   prettier,
   eslint,
-}: Options) => {
-  const projectDir = projectName
-
-  console.info('Creating SvelteKit project...')
+}: SvelteKitOptions) => {
+  logger.info('Creating SvelteKit project...')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  svelteInit.create(projectDir, {
+  svelteInit.create(projectName, {
     name: projectName,
     template: 'skeleton',
     types: 'typescript',
@@ -99,13 +113,25 @@ export const create = async ({
     eslint,
     playwright: false,
   })
-  console.info('Project created!')
+  logger.success(
+    `Successfully created ${chalk.green.bold('SvelteKit')} project!`,
+  )
+  logger.info('')
+}
 
-  const pkgJson = (await fs.readJSON(
-    path.join(projectDir, 'package.json'),
-  )) as PackageJson
+export const create = async (options: Options) => {
+  const { projectName } = options
 
-  const { pkgJson: newPkgJson } = await runAddons({ pkgJson })
+  const projectDir = path.join('.', projectName)
 
-  console.log(newPkgJson.dependencies)
+  createSvelteKitProject(options)
+
+  const pkgJson = await readPackageJson(projectDir)
+
+  const { pkgJson: newPkgJson } = await runInstallers({
+    pkgJson,
+    ...options,
+  })
+
+  await writePackageJson(projectDir, newPkgJson)
 }
