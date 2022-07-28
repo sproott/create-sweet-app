@@ -1,9 +1,9 @@
-import { sveltekit } from '@sveltejs/kit/vite'
-import WindiCSS from 'vite-plugin-windicss'
+import { sveltekit } from '@sveltejs/kit/vite';
+import WindiCSS from 'vite-plugin-windicss';
 
 /** @type {import('vite').UserConfig} */
 const config = {
-  plugins: [sveltekit(), WindiCSS()],
-}
+	plugins: [sveltekit(), WindiCSS()]
+};
 
-export default config
+export default config;

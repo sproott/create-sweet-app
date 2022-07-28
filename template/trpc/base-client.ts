@@ -1,20 +1,18 @@
-import { createTRPCClient, createTRPCClientProxy } from '@trpc/client';
 import type { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
 
 import type { AppRouter } from './server';
 import type { LoadEvent } from '@sveltejs/kit';
 import { browser } from '$app/env';
+import { createTRPCClient } from '@trpc/client';
 import transformer from 'trpc-transformer';
 
 const url = browser ? '/trpc' : 'http://localhost:3000/trpc';
 export default (loadFetch?: LoadEvent['fetch']) =>
-	createTRPCClientProxy(
-		createTRPCClient<AppRouter>({
-			url: loadFetch ? '/trpc' : url,
-			transformer,
-			...(loadFetch && { fetch: loadFetch as typeof fetch })
-		})
-	);
+	createTRPCClient<AppRouter>({
+		url: loadFetch ? '/trpc' : url,
+		transformer,
+		...(loadFetch && { fetch: loadFetch as typeof fetch })
+	});
 
 export type inferQueryOutput<TRouteKey extends keyof AppRouter['_def']['queries']> =
 	inferProcedureOutput<AppRouter['_def']['queries'][TRouteKey]>;

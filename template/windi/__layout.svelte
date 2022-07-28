@@ -1,5 +1,5 @@
 <script lang="ts">
-  import 'virtual:windi.css'
+  import 'virtual:windi.css';
 </script>
 
 <slot />

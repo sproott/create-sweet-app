@@ -38,13 +38,13 @@ export const trpcInstaller = ({
 
     const serverSrc = path.join(
       trpcAssetDir,
-      useExperimentalVersion ? 'experimental-server.ts' : 'server.ts',
+      useExperimentalVersion ? 'experimental-server.ts' : 'base-server.ts',
     )
     const serverDest = 'src/lib/server/index.ts'
 
     const clientSrc = path.join(
       trpcAssetDir,
-      useExperimentalVersion ? 'experimental-client.ts' : 'client.ts',
+      useExperimentalVersion ? 'experimental-client.ts' : 'base-client.ts',
     )
     const clientDest = 'src/lib/trpcClient.ts'
 
@@ -52,7 +52,7 @@ export const trpcInstaller = ({
     const hooksDest = 'src/hooks.ts'
 
     if (useExperimentalVersion) {
-      const npmrcSrc = path.join(trpcAssetDir, '.npmrc')
+      const npmrcSrc = path.join(trpcAssetDir, 'npmrc')
       const npmrcDest = '.npmrc'
       await install(npmrcSrc, npmrcDest)
     }
@@ -68,6 +68,7 @@ export const trpcInstaller = ({
       dependencies: [
         { name: '@trpc/server', version },
         { name: '@trpc/client', version },
+        { name: 'trpc-transformer' },
         { name: 'trpc-sveltekit' },
         { name: 'zod' },
       ],
