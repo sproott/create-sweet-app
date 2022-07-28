@@ -22,7 +22,7 @@ export type Options = SvelteKitOptions & {
   addPrisma: boolean
 }
 
-const addPackage = async ({
+const addDependency = async ({
   pkgJson,
   name,
   version = 'latest',
@@ -84,23 +84,24 @@ export const runInstallers = async ({
     ...(addPrisma ? [prismaInstaller] : []),
   ]
 
-  console.log('installers.length?', installers.length)
-
   logger.info('Adding components...')
-  const outputs = await Promise.all(
-    installers.map((installer) => runInstaller({ installer, projectDir })),
-  )
 
-  const packages = outputs.reduce<Dependency[]>((acc, output) => {
-    return [...acc, ...output.dependencies]
-  }, [])
+  let dependencies: Dependency[] = []
+  for (const installer of installers) {
+    const { dependencies: installerDeps } = await runInstaller({
+      installer,
+      projectDir,
+    })
+    dependencies = [...dependencies, ...installerDeps]
+  }
+
   logger.info('')
 
   const spinner = ora('Adding dependencies...').start()
   let newPkgJson = pkgJson
-  for (const pkg of packages) {
-    const result = await addPackage({
-      ...pkg,
+  for (const dep of dependencies) {
+    const result = await addDependency({
+      ...dep,
       pkgJson: newPkgJson,
     })
     newPkgJson = result.pkgJson
