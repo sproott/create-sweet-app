@@ -3,7 +3,13 @@ export interface Dependency {
   version?: string
   dev?: boolean
 }
+export type InstallFunction = (
+  sourceFile: string,
+  destFile: string,
+) => Promise<void>
 export interface Installer {
   name: string
-  run: () => Promise<{ dependencies: Dependency[] }>
+  run: (args: {
+    install: InstallFunction
+  }) => Promise<{ dependencies: Dependency[] }>
 }

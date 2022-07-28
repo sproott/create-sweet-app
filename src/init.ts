@@ -2,15 +2,12 @@ import path from 'path'
 import chalk from 'chalk'
 import * as svelteInit from 'create-svelte'
 import { execa } from 'execa'
+import fs from 'fs-extra'
 import ora from 'ora'
 import { PackageJson } from 'type-fest'
 import { readPackageJson, writePackageJson } from './files'
-import {
-  trpcInstaller,
-  TrpcInstallerOptions,
-  windiInstaller,
-} from './installers'
-import { Dependency, Installer } from './types'
+import { trpcInstaller, windiInstaller } from './installers'
+import { Dependency, Installer, InstallFunction } from './types'
 import { logger } from './utils/logger'
 
 interface SvelteKitOptions {
@@ -20,6 +17,7 @@ interface SvelteKitOptions {
 }
 export type Options = SvelteKitOptions & {
   useExperimentalTrpcVersion: boolean
+  projectDir: string
 }
 
 const addPackage = async ({
@@ -52,11 +50,18 @@ const addPackage = async ({
   }
 }
 
-const runInstaller = async (
-  installer: Installer,
-): Promise<ReturnType<Installer['run']>> => {
+const runInstaller = async ({
+  installer,
+  projectDir,
+}: {
+  installer: Installer
+  projectDir: string
+}): Promise<ReturnType<Installer['run']>> => {
+  const install: InstallFunction = (src, dest) =>
+    fs.copy(src, path.join(projectDir, dest))
+
   const spinner = ora(`Adding ${installer.name}...`).start()
-  const result = await installer.run()
+  const result = await installer.run({ install })
   spinner.succeed(
     chalk.green(`Successfully added ${chalk.green.bold(installer.name)}!`),
   )
@@ -66,9 +71,11 @@ const runInstaller = async (
 export const runInstallers = async ({
   pkgJson,
   useExperimentalTrpcVersion,
+  projectDir,
 }: {
   pkgJson: PackageJson
   useExperimentalTrpcVersion: boolean
+  projectDir: string
 }) => {
   const installers: Installer[] = [
     windiInstaller,
@@ -76,7 +83,9 @@ export const runInstallers = async ({
   ]
 
   logger.info('Adding components...')
-  const outputs = await Promise.all(installers.map(runInstaller))
+  const outputs = await Promise.all(
+    installers.map((installer) => runInstaller({ installer, projectDir })),
+  )
 
   const packages = outputs.reduce<Dependency[]>((acc, output) => {
     return [...acc, ...output.dependencies]
@@ -120,9 +129,7 @@ const createSvelteKitProject = ({
 }
 
 export const create = async (options: Options) => {
-  const { projectName } = options
-
-  const projectDir = path.join('.', projectName)
+  const { projectDir } = options
 
   createSvelteKitProject(options)
 

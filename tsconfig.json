@@ -1,12 +1,56 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    /* LANGUAGE COMPILATION OPTIONS */
+    "target": "ES2020",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2020"
+    ],
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "resolveJsonModule": true,
+    /* EMIT RULES */
+    "outDir": "./dist",
+    "noEmit": true,
     "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "src",
+    "removeComments": true,
+    /* TYPE CHECKING RULES */
     "strict": true,
-    "esModuleInterop": true
-  }
+    // "noImplicitAny": true, // Included in "Strict"
+    // "noImplicitThis": true, // Included in "Strict"
+    // "strictBindCallApply": true, // Included in "Strict"
+    // "strictFunctionTypes": true, // Included in "Strict"
+    // "strictNullChecks": true, // Included in "Strict"
+    // "strictPropertyInitialization": true, // Included in "Strict"
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "useUnknownInCatchVariables": true,
+    "noUncheckedIndexedAccess": true,
+    // THE BELOW ARE EXTRA STRICT OPTIONS THAT SHOULD ONLY BY CONSIDERED IN VERY SAFE PROJECTS
+    // "exactOptionalPropertyTypes": true,
+    // "noPropertyAccessFromIndexSignature": true
+    /* OTHER OPTIONS */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    // "emitDecoratorMetadata": true,
+    // "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true
+  },
+  "include": [
+    "src",
+    "typings/index.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "template"
+  ]
 }

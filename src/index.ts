@@ -1,6 +1,43 @@
+import path from 'path'
+import chalk from 'chalk'
+import fs from 'fs-extra'
 import inquirer from 'inquirer'
 import { Options, create } from './init'
 import { logger } from './utils/logger'
+
+const handleDestination = async ({
+  projectName,
+  projectDir,
+}: {
+  projectName: string
+  projectDir: string
+}) => {
+  if (fs.existsSync(projectDir)) {
+    if (fs.readdirSync(projectDir).length === 0) {
+      logger.info(`Destination exists but is empty, continuing...\n`)
+    } else {
+      const { overwriteDir } = await inquirer.prompt<{ overwriteDir: boolean }>(
+        {
+          name: 'overwriteDir',
+          type: 'confirm',
+          message: `${chalk.redBright.bold('Warning:')} ${chalk.cyan.bold(
+            projectName,
+          )} already exists and isn't empty. Do you want to overwrite it?`,
+          default: false,
+        },
+      )
+      if (!overwriteDir) {
+        logger.error('Aborting installation...')
+        process.exit(0)
+      } else {
+        logger.info(
+          `Emptying ${chalk.cyan.bold(projectName)} and continuing...\n`,
+        )
+        fs.emptyDirSync(projectDir)
+      }
+    }
+  }
+}
 
 const main = async () => {
   const { projectName } = await inquirer.prompt<Pick<Options, 'projectName'>>({
@@ -31,11 +68,15 @@ const main = async () => {
   })
   logger.info('')
 
+  const projectDir = path.resolve(process.cwd(), projectName)
+  await handleDestination({ projectDir, projectName })
+
   const options: Options = {
     projectName,
     prettier,
     eslint,
     useExperimentalTrpcVersion,
+    projectDir,
   }
 
   await create(options)
