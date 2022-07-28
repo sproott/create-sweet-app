@@ -117,7 +117,8 @@ const createSvelteKitProject = ({
   prettier,
   eslint,
 }: SvelteKitOptions) => {
-  logger.info('Creating SvelteKit project...')
+  logger.info('Setting up project structure...')
+  const spinner = ora('Creating SvelteKit project...').start()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   svelteInit.create(projectName, {
     name: projectName,
@@ -127,8 +128,10 @@ const createSvelteKitProject = ({
     eslint,
     playwright: false,
   })
-  logger.success(
-    `Successfully created ${chalk.green.bold('SvelteKit')} project!`,
+  spinner.succeed(
+    chalk.green(
+      `Successfully created ${chalk.green.bold('SvelteKit')} project!`,
+    ),
   )
   logger.info('')
 }
