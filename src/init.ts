@@ -6,9 +6,10 @@ import fs from 'fs-extra'
 import ora from 'ora'
 import { PackageJson } from 'type-fest'
 import { readPackageJson, writePackageJson } from './files'
-import { trpcInstaller, windiInstaller } from './installers'
+import { prismaInstaller, trpcInstaller, windiInstaller } from './installers'
 import { Dependency, Installer, InstallFunction } from './types'
 import { logger } from './utils/logger'
+import { sortObject } from './utils/sortObject.js'
 
 interface SvelteKitOptions {
   projectName: string
@@ -18,6 +19,7 @@ interface SvelteKitOptions {
 export type Options = SvelteKitOptions & {
   useExperimentalTrpcVersion: boolean
   projectDir: string
+  addPrisma: boolean
 }
 
 const addPackage = async ({
@@ -72,15 +74,17 @@ export const runInstallers = async ({
   pkgJson,
   useExperimentalTrpcVersion,
   projectDir,
-}: {
+  addPrisma,
+}: Options & {
   pkgJson: PackageJson
-  useExperimentalTrpcVersion: boolean
-  projectDir: string
 }) => {
   const installers: Installer[] = [
     windiInstaller,
     trpcInstaller({ useExperimentalVersion: useExperimentalTrpcVersion }),
+    ...(addPrisma ? [prismaInstaller] : []),
   ]
+
+  console.log('installers.length?', installers.length)
 
   logger.info('Adding components...')
   const outputs = await Promise.all(
@@ -139,6 +143,13 @@ export const create = async (options: Options) => {
     pkgJson,
     ...options,
   })
+
+  if (newPkgJson.dependencies) {
+    newPkgJson.dependencies = sortObject(newPkgJson.dependencies)
+  }
+  if (newPkgJson.devDependencies) {
+    newPkgJson.devDependencies = sortObject(newPkgJson.devDependencies)
+  }
 
   await writePackageJson(projectDir, newPkgJson)
 }

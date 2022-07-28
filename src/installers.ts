@@ -75,3 +75,25 @@ export const trpcInstaller = ({
     }
   },
 })
+
+export const prismaInstaller: Installer = {
+  name: 'Prisma',
+  run: async ({ install }) => {
+    const prismaAssetDir = path.join(PKG_ROOT, 'template/prisma')
+
+    const prismaSchemaSrc = path.join(prismaAssetDir, 'schema.prisma')
+    const prismaSchemaDest = 'prisma/schema.prisma'
+
+    const prismaClientSrc = path.join(prismaAssetDir, 'client.ts')
+    const prismaClientDest = 'src/lib/prismaClient.ts'
+
+    await Promise.all([
+      install(prismaSchemaSrc, prismaSchemaDest),
+      install(prismaClientSrc, prismaClientDest),
+    ])
+
+    return {
+      dependencies: [{ name: 'prisma', dev: true }, { name: '@prisma/client' }],
+    }
+  },
+}
