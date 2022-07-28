@@ -1,8 +1,8 @@
 {
   "name": "create-sweet-app",
   "version": "1.0.2",
-  "description": "The SWeeT stack - scaffold a full-stack application using SvelteKit, WindiCSS and tRPC",
-  "author": "David Hrabě",
+  "description": "Scaffold a full-stack SvelteKit application with tRPC and WindiCSS out of the box",
+  "author": "David Hrabě <david.hrabe12@seznam.cz>",
   "license": "MIT",
   "repository": {
     "type": "git",
