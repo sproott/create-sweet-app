@@ -9,7 +9,7 @@ import { readPackageJson, writePackageJson } from './files'
 import { prismaInstaller, trpcInstaller, windiInstaller } from './installers'
 import { Dependency, Installer, InstallFunction } from './types'
 import { logger } from './utils/logger'
-import { sortObject } from './utils/sortObject.js'
+import { sortObject } from './utils/sortObject'
 
 interface SvelteKitOptions {
   projectName: string

@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import fs from 'fs-extra'
 import inquirer from 'inquirer'
 import { Options, create } from './init'
-import { getUserPkgManager } from './utils/getUserPkgManager.js'
+import { getUserPkgManager } from './utils/getUserPkgManager'
 import { logger } from './utils/logger'
 
 const handleDestination = async ({
@@ -53,7 +53,7 @@ const main = async () => {
   const { projectName } = await inquirer.prompt<Pick<Options, 'projectName'>>({
     name: 'projectName',
     type: 'input',
-    message: 'What is the name of your project?',
+    message: 'What will your project be called?',
     default: 'my-sweet-app',
   })
   const { prettier } = await inquirer.prompt<Pick<Options, 'prettier'>>({

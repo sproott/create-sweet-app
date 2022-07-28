@@ -1,6 +1,6 @@
 {
   "name": "create-sweet-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The SWeeT stack - scaffold a full-stack application using SvelteKit, WindiCSS and tRPC",
   "author": "David Hrabě",
   "license": "MIT",
@@ -28,6 +28,8 @@
     "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile",
     "dev": "tsup src/index.ts --format esm --watch --clean --onSuccess \"node dist/index.js\"",
     "start": "node dist/index.js",
+    "lint": "eslint src/ --fix",
+    "lint:check": "eslint src/ --cache --cache-strategy content",
     "pub:beta": "npm run build && npm publish --tag beta",
     "pub:release": "npm run build && npm publish"
   },
