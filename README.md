@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  Interactive CLI to quickly set up an opinionated, full-stack, typesafe SvelteKit project. Inspired by the <a href="https://init.tips">T3 Stack</a>
+  Interactive CLI to quickly set up an opinionated, full-stack, typesafe SvelteKit project. Inspired by the <a href="https://init.tips">T3 Stack</a> and <a href="https://github.com/t3-oss/create-t3-app">create-t3-app</a>
 </p>
 
 <p align="center">
