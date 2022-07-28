@@ -1,17 +1,36 @@
 {
   "name": "create-sweet-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The SWeeT stack - scaffold a full-stack application using SvelteKit, WindiCSS and tRPC",
-  "main": "index.js",
+  "author": "David Hrabě",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sproott/create-sweet-app.git"
+  },
+  "keywords": [
+    "create-sweet-app",
+    "svelte-kit",
+    "sweet-stack",
+    "windi",
+    "tRPC",
+    "typescript"
+  ],
+  "type": "module",
+  "exports": "./dist/index.js",
+  "bin": {
+    "create-sweet-app": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=14.16"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm --clean --sourcemap --minify --metafile",
     "dev": "tsup src/index.ts --format esm --watch --clean --onSuccess \"node dist/index.js\"",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "pub:beta": "npm run build && npm publish --tag beta",
+    "pub:release": "npm run build && npm publish"
   },
-  "keywords": [],
-  "type": "module",
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.1",
