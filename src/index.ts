@@ -51,6 +51,11 @@ const logNextSteps = (projectName: string) => {
 }
 
 const main = async () => {
+  const pkgManager = getUserPkgManager()
+  if (pkgManager === 'yarn' || pkgManager === 'pnpm') {
+    console.log('')
+  }
+
   const { projectName } = await inquirer.prompt<Pick<Options, 'projectName'>>({
     name: 'projectName',
     type: 'input',
