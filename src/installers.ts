@@ -86,9 +86,13 @@ export const prismaInstaller: Installer = {
     const prismaClientSrc = path.join(prismaAssetDir, 'client.ts')
     const prismaClientDest = 'src/lib/prismaClient.ts'
 
+    const dotenvSrc = path.join(prismaAssetDir, '.env-example')
+    const dotenvDest = '.env'
+
     await Promise.all([
       install(prismaSchemaSrc, prismaSchemaDest),
       install(prismaClientSrc, prismaClientDest),
+      install(dotenvSrc, dotenvDest),
     ])
 
     return {
