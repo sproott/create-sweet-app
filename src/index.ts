@@ -6,6 +6,7 @@ import inquirer from 'inquirer'
 import { Options, create } from './init'
 import { getUserPkgManager } from './utils/getUserPkgManager'
 import { logger } from './utils/logger'
+import { validateAppName } from './utils/validateAppName.js'
 
 const handleDestination = async ({
   projectName,
@@ -61,6 +62,10 @@ const main = async () => {
     type: 'input',
     message: 'What will your project be called?',
     default: 'my-sweet-app',
+    validate: validateAppName,
+    transformer: (input: string) => {
+      return input.trim()
+    },
   })
   const { prettier } = await inquirer.prompt<Pick<Options, 'prettier'>>({
     name: 'prettier',
