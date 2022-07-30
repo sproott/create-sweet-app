@@ -67,16 +67,28 @@ const main = async () => {
       return input.trim()
     },
   })
+  const { eslint } = await inquirer.prompt<Pick<Options, 'eslint'>>({
+    name: 'eslint',
+    type: 'confirm',
+    message: 'Add ESLint for code linting?',
+    default: false,
+  })
   const { prettier } = await inquirer.prompt<Pick<Options, 'prettier'>>({
     name: 'prettier',
     type: 'confirm',
     message: 'Add Prettier for code formatting?',
     default: false,
   })
-  const { eslint } = await inquirer.prompt<Pick<Options, 'eslint'>>({
-    name: 'eslint',
+  const { playwright } = await inquirer.prompt<Pick<Options, 'playwright'>>({
+    name: 'playwright',
     type: 'confirm',
-    message: 'Add ESLint for code linting?',
+    message: 'Add Playwright for browser testing?',
+    default: false,
+  })
+  const { addPrisma } = await inquirer.prompt<Pick<Options, 'addPrisma'>>({
+    name: 'addPrisma',
+    type: 'confirm',
+    message: 'Add Prisma for database access?',
     default: false,
   })
   const { useExperimentalTrpcVersion } = await inquirer.prompt<
@@ -87,12 +99,6 @@ const main = async () => {
     message: 'Use experimental version of tRPC with new features?',
     default: false,
   })
-  const { addPrisma } = await inquirer.prompt<Pick<Options, 'addPrisma'>>({
-    name: 'addPrisma',
-    type: 'confirm',
-    message: 'Add Prisma for database access?',
-    default: false,
-  })
   logger.info('')
 
   const projectDir = path.resolve(process.cwd(), projectName)
@@ -100,8 +106,9 @@ const main = async () => {
 
   const options: Options = {
     projectName,
-    prettier,
     eslint,
+    prettier,
+    playwright,
     useExperimentalTrpcVersion,
     addPrisma,
     projectDir,

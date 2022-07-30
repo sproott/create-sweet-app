@@ -15,6 +15,7 @@ interface SvelteKitOptions {
   projectName: string
   prettier: boolean
   eslint: boolean
+  playwright: boolean
 }
 export type Options = SvelteKitOptions & {
   useExperimentalTrpcVersion: boolean
@@ -114,8 +115,9 @@ export const runInstallers = async ({
 
 const createSvelteKitProject = ({
   projectName,
-  prettier,
   eslint,
+  prettier,
+  playwright,
 }: SvelteKitOptions) => {
   logger.info('Setting up project structure...')
   const spinner = ora('Creating SvelteKit project...').start()
@@ -124,9 +126,9 @@ const createSvelteKitProject = ({
     name: projectName,
     template: 'skeleton',
     types: 'typescript',
-    prettier,
     eslint,
-    playwright: false,
+    prettier,
+    playwright,
   })
   spinner.succeed(
     chalk.green(
