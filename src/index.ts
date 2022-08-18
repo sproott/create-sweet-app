@@ -6,7 +6,7 @@ import inquirer from 'inquirer'
 import { Options, create } from './init'
 import { getUserPkgManager } from './utils/getUserPkgManager'
 import { logger } from './utils/logger'
-import { validateAppName } from './utils/validateAppName.js'
+import { validateAppName } from './utils/validateAppName'
 
 const handleDestination = async ({
   projectName,
