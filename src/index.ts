@@ -1,12 +1,13 @@
 #!/usr/bin/env node
+
 import path from 'path'
 import chalk from 'chalk'
 import fs from 'fs-extra'
 import inquirer from 'inquirer'
-import { Options, create } from './init'
-import { getUserPkgManager } from './utils/getUserPkgManager'
-import { logger } from './utils/logger'
-import { validateAppName } from './utils/validateAppName'
+import { Options, create } from './init.js'
+import { getUserPkgManager } from './utils/getUserPkgManager.js'
+import { logger } from './utils/logger.js'
+import { validateAppName } from './utils/validateAppName.js'
 
 const handleDestination = async ({
   projectName,

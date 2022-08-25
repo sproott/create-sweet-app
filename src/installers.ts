@@ -1,6 +1,6 @@
 import path from 'path'
-import { PKG_ROOT } from './constants'
-import { Installer } from './types'
+import { PKG_ROOT } from './constants.js'
+import { Installer } from './types.js'
 
 export const windiInstaller: Installer = {
   name: 'WindiCSS',

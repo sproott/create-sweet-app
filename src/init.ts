@@ -5,11 +5,11 @@ import { execa } from 'execa'
 import fs from 'fs-extra'
 import ora from 'ora'
 import { PackageJson } from 'type-fest'
-import { readPackageJson, writePackageJson } from './files'
-import { prismaInstaller, trpcInstaller, windiInstaller } from './installers'
-import { Dependency, Installer, InstallFunction } from './types'
-import { logger } from './utils/logger'
-import { sortObject } from './utils/sortObject'
+import { readPackageJson, writePackageJson } from './files.js'
+import { prismaInstaller, trpcInstaller, windiInstaller } from './installers.js'
+import { Dependency, Installer, InstallFunction } from './types.js'
+import { logger } from './utils/logger.js'
+import { sortObject } from './utils/sortObject.js'
 
 interface SvelteKitOptions {
   projectName: string
