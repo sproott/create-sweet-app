@@ -35,25 +35,25 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/inquirer": "^8.2.1",
-    "@types/node": "^18.6.3",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
-    "eslint": "^8.21.0",
+    "@types/inquirer": "^9.0.1",
+    "@types/node": "^18.7.13",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.4.0",
+    "eslint-import-resolver-typescript": "^3.5.0",
     "eslint-plugin-import": "^2.26.0",
     "prettier": "^2.7.1",
-    "tsup": "^6.2.1",
-    "type-fest": "^2.18.0",
+    "tsup": "^6.2.2",
+    "type-fest": "^2.19.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
     "chalk": "^5.0.1",
-    "create-svelte": "2.0.0-next.152",
+    "create-svelte": "2.0.0-next.162",
     "execa": "^6.1.0",
     "fs-extra": "^10.1.0",
-    "inquirer": "^9.0.2",
+    "inquirer": "^9.1.0",
     "ora": "^6.1.2"
   }
 }
