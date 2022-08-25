@@ -10,8 +10,8 @@ export const windiInstaller: Installer = {
     const viteConfigSrc = path.join(windiAssetDir, 'vite.config.js')
     const viteConfigDest = 'vite.config.js'
 
-    const layoutSvelteSrc = path.join(windiAssetDir, '__layout.svelte')
-    const layoutSvelteDest = 'src/routes/__layout.svelte'
+    const layoutSvelteSrc = path.join(windiAssetDir, '+layout.svelte')
+    const layoutSvelteDest = 'src/routes/+layout.svelte'
 
     await Promise.all([
       install(viteConfigSrc, viteConfigDest),
