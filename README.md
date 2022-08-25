@@ -12,7 +12,7 @@
 
 ## What is the SWeeT Stack?
 
-The SWeeT Stack is a tech stack consisting of SvelteKit, WindiCSS and tRPC. You can think of it a T3 alternative built on SvelteKit.
+The SWeeT Stack is a tech stack consisting of SvelteKit, WindiCSS and tRPC. You can think of it as a T3 alternative built on SvelteKit.
 
 ## Getting Started
 
