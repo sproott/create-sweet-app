@@ -18,7 +18,6 @@ interface SvelteKitOptions {
   playwright: boolean
 }
 export type Options = SvelteKitOptions & {
-  useExperimentalTrpcVersion: boolean
   projectDir: string
   addPrisma: boolean
 }
@@ -73,7 +72,6 @@ const runInstaller = async ({
 
 export const runInstallers = async ({
   pkgJson,
-  useExperimentalTrpcVersion,
   projectDir,
   addPrisma,
 }: Options & {
@@ -81,7 +79,7 @@ export const runInstallers = async ({
 }) => {
   const installers: Installer[] = [
     windiInstaller,
-    trpcInstaller({ useExperimentalVersion: useExperimentalTrpcVersion }),
+    trpcInstaller,
     ...(addPrisma ? [prismaInstaller] : []),
   ]
 

@@ -92,14 +92,6 @@ const main = async () => {
     message: 'Add Prisma for database access?',
     default: false,
   })
-  const { useExperimentalTrpcVersion } = await inquirer.prompt<
-    Pick<Options, 'useExperimentalTrpcVersion'>
-  >({
-    name: 'useExperimentalTrpcVersion',
-    type: 'confirm',
-    message: 'Use experimental version of tRPC with new features?',
-    default: false,
-  })
   logger.info('')
 
   const projectDir = path.resolve(process.cwd(), projectName)
@@ -110,7 +102,6 @@ const main = async () => {
     eslint,
     prettier,
     playwright,
-    useExperimentalTrpcVersion,
     addPrisma,
     projectDir,
   }

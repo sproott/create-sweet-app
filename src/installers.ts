@@ -10,51 +10,40 @@ export const windiInstaller: Installer = {
     const viteConfigSrc = path.join(windiAssetDir, 'vite.config.js')
     const viteConfigDest = 'vite.config.js'
 
+    const windiConfigSrc = path.join(windiAssetDir, 'windi.config.ts')
+    const windiConfigDest = 'windi.config.ts'
+
     const layoutSvelteSrc = path.join(windiAssetDir, '+layout.svelte')
     const layoutSvelteDest = 'src/routes/+layout.svelte'
 
     await Promise.all([
       install(viteConfigSrc, viteConfigDest),
+      install(windiConfigSrc, windiConfigDest),
       install(layoutSvelteSrc, layoutSvelteDest),
     ])
 
     return {
-      dependencies: [{ name: 'vite-plugin-windicss', dev: true }],
+      dependencies: [
+        { name: 'vite-plugin-windicss', dev: true },
+        { name: 'windicss', dev: true },
+      ],
     }
   },
 }
 
-export interface TrpcInstallerOptions {
-  useExperimentalVersion: boolean
-}
-
-export const trpcInstaller = ({
-  useExperimentalVersion,
-}: TrpcInstallerOptions): Installer => ({
+export const trpcInstaller: Installer = {
   name: 'tRPC',
   run: async ({ install }) => {
     const trpcAssetDir = path.join(PKG_ROOT, 'template/trpc')
 
-    const serverSrc = path.join(
-      trpcAssetDir,
-      useExperimentalVersion ? 'experimental-server.ts' : 'base-server.ts',
-    )
+    const serverSrc = path.join(trpcAssetDir, 'server.ts')
     const serverDest = 'src/lib/server/index.ts'
 
-    const clientSrc = path.join(
-      trpcAssetDir,
-      useExperimentalVersion ? 'experimental-client.ts' : 'base-client.ts',
-    )
-    const clientDest = 'src/lib/trpcClient.ts'
+    const clientSrc = path.join(trpcAssetDir, 'client.ts')
+    const clientDest = 'src/lib/trpc.ts'
 
-    const hooksSrc = path.join(trpcAssetDir, 'hooks.ts')
-    const hooksDest = 'src/hooks.ts'
-
-    if (useExperimentalVersion) {
-      const npmrcSrc = path.join(trpcAssetDir, 'npmrc')
-      const npmrcDest = '.npmrc'
-      await install(npmrcSrc, npmrcDest)
-    }
+    const hooksSrc = path.join(trpcAssetDir, 'hooks.server.ts')
+    const hooksDest = 'src/hooks.server.ts'
 
     await Promise.all([
       install(serverSrc, serverDest),
@@ -62,18 +51,16 @@ export const trpcInstaller = ({
       install(hooksSrc, hooksDest),
     ])
 
-    const version = useExperimentalVersion ? 'experimental' : undefined
     return {
       dependencies: [
-        { name: '@trpc/server', version },
-        { name: '@trpc/client', version },
-        { name: 'trpc-transformer' },
+        { name: '@trpc/server' },
+        { name: '@trpc/client' },
         { name: 'trpc-sveltekit' },
         { name: 'zod' },
       ],
     }
   },
-})
+}
 
 export const prismaInstaller: Installer = {
   name: 'Prisma',
