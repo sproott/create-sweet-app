@@ -1,6 +1,6 @@
 {
   "name": "create-sweet-app",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Scaffold a full-stack SvelteKit application with tRPC and WindiCSS out of the box",
   "author": "David Hrabě <david.hrabe12@seznam.cz>",
   "license": "MIT",
